@@ -1,10 +1,10 @@
-# elemental-netball — Design System Rules for AI Agents
+# elemental-netball - Design System Rules for AI Agents
 
-This file tells AI coding agents (Claude Code, etc.) how to work with this project's design system when implementing new assets, templates, or visual changes. The canonical visual spec lives in [SVG_SPEC.md](SVG_SPEC.md) — these rules are the operational shorthand.
+This file tells AI coding agents (Claude Code, etc.) how to work with this project's design system when implementing new assets, templates, or visual changes. The canonical visual spec lives in [SVG_SPEC.md](SVG_SPEC.md) - these rules are the operational shorthand.
 
 ## Project shape
 
-- **Elemental Netball is a learning system** that teaches netball positions and matchups through a seven-colour spectrum and two mirror-image teams: **Fire Team** and **Ice Team**. Coach-facing reports (stats, heatmaps) are a secondary surface — primary outputs are educational artefacts (position guide, junior matchup card, team sheet).
+- **Elemental Netball is a learning system** that teaches netball positions and matchups through a seven-colour spectrum and two mirror-image teams: **Fire Team** and **Ice Team**. Coach-facing reports (stats, heatmaps) are a secondary surface - primary outputs are educational artefacts (position guide, junior matchup card, team sheet).
 - **Not a web app.** This is a Python + Jinja2 + Playwright pipeline that renders HTML/CSS into print-ready PDFs and editable HTML.
 - **No React, Vue, Tailwind, or component framework.** "Components" are SVG assets + Jinja2 templates + CSS classes.
 - **Design tools**: Figma (canonical), Illustrator (legacy, transitional).
@@ -16,14 +16,14 @@ assets/svg/   SVG sources (bibs, courts, thermometers, matchup diagrams, zones)
 assets/png/   PNG exports embedded in PDFs (Playwright renders these faster than SVG)
 data/         Jinja2 input JSON, one per generated artefact
 templates/    Jinja2 HTML templates (.html)
-styles/       main.css — shared print stylesheet
+styles/       main.css - shared print stylesheet
 src/          pipeline.py, render.py, extract.py, repair_svgs.py, recolour.py, promote.py
 output/       generated PDFs + optional .html (gitignored)
 repaired/     repair_svgs.py output, plus originals/ backup (gitignored)
 ```
 
 - IMPORTANT: All assets live in `assets/svg/` or `assets/png/`. **Never** put assets in repo root.
-- IMPORTANT: Data JSON paths are written **relative to repo root** (`"assets/png/Red_GS_Fire.png"`) — `src/render.py` resolves them to `file://` URIs before handing to Playwright.
+- IMPORTANT: Data JSON paths are written **relative to repo root** (`"assets/png/Red_GS_Fire.png"`) - `src/render.py` resolves them to `file://` URIs before handing to Playwright.
 
 ## Design tokens (single source of truth)
 
@@ -39,15 +39,15 @@ The seven-position colour spectrum is the brand. **Never invent new colours.** A
 | Blue | `#0052b3` | `--blue` | GD Fire / GA Ice |
 | Purple | `#639` | `--purple` | GK Fire / GS Ice |
 | Bib outline | `#b3b3b3` | `--bib-outline` | Neutral grey on Fire bib frames |
-| Outline | `#1a1a1a` | — | Court lines, borders |
+| Outline | `#1a1a1a` | - | Court lines, borders |
 
-- IMPORTANT: In HTML/CSS, reference colours via the CSS custom properties in `styles/main.css` (`:root` block) — never hardcode hex.
+- IMPORTANT: In HTML/CSS, reference colours via the CSS custom properties in `styles/main.css` (`:root` block) - never hardcode hex.
 - IMPORTANT: In SVG files, colours **must** be literal hex (CSS vars don't resolve inside `<img src>`-loaded SVGs). See SVG_SPEC.md §3.
-- If the palette changes, run `python src/recolour.py --pair "#oldhex=#newhex" --apply` — it swaps across CSS, JSON, MD, and SVG in one pass.
+- If the palette changes, run `python src/recolour.py --pair "#oldhex=#newhex" --apply` - it swaps across CSS, JSON, MD, and SVG in one pass.
 
 ## The Fire Team / Ice Team variant logic
 
-This is non-obvious and easy to get wrong. **Fire Team** and **Ice Team** are canonical proper-noun names — always use them in full when referring to the teams (not bare "Fire" or "Ice"). Bare "Fire" / "Ice" is only OK as a variant adjective ("Fire bib", "Ice variant", "Fire spectrum").
+This is non-obvious and easy to get wrong. **Fire Team** and **Ice Team** are canonical proper-noun names - always use them in full when referring to the teams (not bare "Fire" or "Ice"). Bare "Fire" / "Ice" is only OK as a variant adjective ("Fire bib", "Ice variant", "Fire spectrum").
 
 - **Fire Team bib** = filled bib (solid colour rounded rect + thin `#b3b3b3` grey outer frame + white text).
 - **Ice Team bib** = white interior + thick (6pt) coloured stroke + coloured text. No grey frame.
@@ -69,7 +69,7 @@ Per SVG_SPEC.md (read it for the long version):
 - IMPORTANT: Always include `xmlns:xlink` and `preserveAspectRatio="xMidYMid meet"` on root `<svg>`.
 - IMPORTANT: Use **inline presentation attributes** (`fill="#c33"`), not `<style>` blocks with classes. The repair script enforces this; design tools should be configured to emit it directly.
 - IMPORTANT: Remove Illustrator/Figma id noise (`id="Layer_2"`, etc.) before commit.
-- Convert all text to outlines on export — bibs ship without webfont dependencies.
+- Convert all text to outlines on export - bibs ship without webfont dependencies.
 
 ## Figma export contract
 
@@ -95,7 +95,7 @@ When exporting any asset from Figma into this repo (see SVG_SPEC.md §14):
 
 When asked to implement a Figma design in this repo:
 
-1. Run `get_design_context` for the node — get structured representation and any tokens/components mapped.
+1. Run `get_design_context` for the node - get structured representation and any tokens/components mapped.
 2. Run `get_screenshot` for visual reference.
 3. **Do not import the React+Tailwind output literally.** This project is Python+Jinja2+CSS. Translate manually:
    - Layout primitives → use existing `.junior-grid`, `.junior-row`, `.matchup-card`, `.stats-grid`, `.zone-section` classes in `styles/main.css` first.
@@ -134,7 +134,7 @@ python src/pipeline.py generate --template <name> --data <data.json> --keep-html
 python src/pipeline.py templates                                                  # list templates
 ```
 
-- PDFs from Playwright are **vector** — editable in Illustrator with layers preserved.
+- PDFs from Playwright are **vector** - editable in Illustrator with layers preserved.
 - The `--keep-html` flag saves the rendered HTML for direct editing in a browser or text editor.
 
 ## Style rules
@@ -151,3 +151,13 @@ python src/pipeline.py templates                                                
 - Using `var(--colourname)` in SVGs → no, literal hex (SVG_SPEC.md §3).
 - Adding a new colour to the palette → no, the 7-position spectrum is the brand. If a real need arises, update SVG_SPEC.md §1 first and run `recolour.py` to propagate.
 - Renaming the existing 14 bib filenames → no, they're referenced by data JSON and downstream tools (`promote.py` has a hardcoded `TARGET_BIBS` set).
+
+---
+
+## Paired file
+
+`AGENTS.md` in this directory carries the same project knowledge for Codex and other
+tools that never load the global `~/.claude/CLAUDE.md`. The two are deliberately forked
+where they address the agent directly, so they are not interchangeable, but every factual
+change (paths, schemas, repo names, conventions) belongs in both. Run the
+`scaffold-auditor` agent to catch drift.
