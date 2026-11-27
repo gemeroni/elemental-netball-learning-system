@@ -1,6 +1,25 @@
-# elemental-netball - Design System Rules for AI Agents
-
 This file tells AI coding agents (Claude Code, etc.) how to work with this project's design system when implementing new assets, templates, or visual changes. The canonical visual spec lives in [SVG_SPEC.md](SVG_SPEC.md) - these rules are the operational shorthand.
+
+## The agentic loop
+
+Work is a stateful loop, never one prompt in and one answer out. Run every task through it:
+
+1. Understand the goal.
+2. Inspect the workspace - read the real state before acting.
+3. Choose the next action.
+4. Run it.
+5. Observe the result.
+6. Repair, continue, or verify - then loop until there is an artifact.
+
+Two things make the loop real, and both are the job, not extras:
+
+- **An action layer.** The loop needs a place where actions actually run and evidence comes back: files to inspect, commands to run, output to read, artifacts to hand over. A description of an action is not an action. When the environment can do the work, operate it; do not hand back a recipe.
+- **Verification as the closing move.** The capability is not producing output; it is running and verifying it. A loop that stops before observe-and-verify has not closed. Never call a plan, a stub, or a plausible-looking result done.
+
+The harness is the whole system around the model: instructions, context, tools, state, permissions, feedback loops, and execution environment. Work the loop, not the single turn.
+
+Canonical spec (shared fleet vault): `The Work/Agentic_Loop/AGENTIC_LOOP.md`
+
 
 ## Project shape
 
